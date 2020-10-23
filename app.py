@@ -35,7 +35,7 @@ def conn(sql_query):
 
 
 var_on_server = [1,2,3,4,5,6]
-
+#Hello
 sql = "select * from users_last_image;"
 # val = (user['first_name'], user['last_name'], user['id'], user_last_word, user['username'], user['id'], user_last_word)
 data = conn('select * from users_last_image;')
