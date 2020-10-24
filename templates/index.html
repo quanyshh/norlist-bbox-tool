@@ -1,170 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<title>Contact V18</title>
 	<meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- <script type="text/javascript" src="brython.js"></script> -->
-    
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.10/brython.min.js"></script> -->
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.10/brython_stdlib.min.js"></script> -->
-  <script type="text/javascript" src="brython.min.js"></script>
-  <script type="text/javascript" src="brython_stdlib.min.js"></script>
-<!--===============================================================================================-->
-	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
-<!--===============================================================================================-->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- <script type="text/javascript" src="brython.js"></script> -->
+
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.10/brython.min.js"></script> -->
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.10/brython_stdlib.min.js"></script> -->
+
+	<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="images/icons/favicon.ico" />
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 </head>
-<body onload="brython(1)">
-  <script type="text/python" src="functions.py"></script>
 
+<body onload="brython(1)">
+	<script type="text/python" src="functions.py"></script>
 	<div class="container-contact100">
 		<div class="wrap-contact100">
-			<form class="contact100-form validate-form">
+			<form class="contact100-form validate-form" method="get">
 				<span class="contact100-form-title">
 					Qazaq Words
 				</span>
-
-
-				<!-- <div class="wrap-input100 validate-input" data-validate="Name is required">
-					<label class="label-input100" for="name">Full name</label>
-					<input id="name" class="input100" type="text" name="name" placeholder="Enter your name...">
-					<span class="focus-input100"></span>
-				</div> -->
-
-
-				<!-- <div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-					<label class="label-input100" for="email">Email Address</label>
-					<input id="email" class="input100" type="text" name="email" placeholder="Enter your email...">
-					<span class="focus-input100"></span>
-				</div> -->
-
 				<div class="wrap-input100">
 					<div class="label-input100">Выберите аннотатора</div>
 					<div>
-            <select class="js-select2" name="service">
-              {% for element in users %}
-                <option>{{element}}</option>
-              {% endfor %}
+						<select class="js-select2" name="service">
+							{% for element in users %}
+
+							{% if current_user_id|string() == element.user_id|string() %}
+
+							<option value="{{element.user_id}}" selected>{{element.user_id}} {{element.user_name }}
+							</option>
+							{% else %}
+							<option value="{{element.user_id}}">{{element.user_id}} {{element.user_name }}</option>
+							{% endif %}
+							{% endfor %}
 						</select>
+
 						<div class="dropDownSelect2"></div>
 					</div>
 					<span class="focus-input100"></span>
 				</div>
+				<button type="submit" class="btn btn-success">Submit</button>
 
-				<div class="wrap-input100 validate-input" data-validate = "Message is required">
-					<label class="label-input100" for="message">Message</label>
-					<textarea id="message" class="input100" name="message" placeholder="Type your message here..."></textarea>
-					<span class="focus-input100"></span>
-				</div>
-
-				<div class="container-contact100-form-btn">
-					<button id="asd" class="contact100-form-btn">
-						Показать результаты
-					</button>
-        </div>
-
-        <div class="container-contact100-form-btn">
-					<button id="test" class="contact100-form-btn">
-						Начать проверку
-					</button>
-        </div>
-        
-				<!-- <div class="contact100-form-social flex-c-m">
-					<a href="#" class="contact100-form-social-item flex-c-m bg1 m-r-5">
-						<i class="fa fa-facebook-f" aria-hidden="true"></i>
-					</a>
-
-					<a href="#" class="contact100-form-social-item flex-c-m bg2 m-r-5">
-						<i class="fa fa-twitter" aria-hidden="true"></i>
-					</a>
-
-					<a href="#" class="contact100-form-social-item flex-c-m bg3">
-						<i class="fa fa-youtube-play" aria-hidden="true"></i>
-					</a>
-				</div> -->
 			</form>
 
-      <div class="contact100-more flex-col-c-m" style="background-image: url('images/bg-01.jpg');">
-        <div class="wrap-input50 validate-input" data-validate="Name is required">
-					<label class="label-input50" for="name">Full name</label>
-          <input id="name" class="input50" type="text" name="name" placeholder="Annotation 1">
-          <input id="name" class="input50" type="text" name="name" placeholder="Annotation 2">
-					<span class="focus-input100"></span>
-				</div>
-        <button class="contact100-form-btn">
-          Send
-        </button>
-				
+
+			<div class="contact100-more flex-col-c-m" style="background-color: rgb(242, 245, 247);">
+				<h1>Total: {{ total }}; </h1>
+				<h1>Misc: {{ misc }};</h1>
+				<br>
+
+
+				{% for row in data %}
+				<img style="" src="media/{{row.filename}}" alt="Word image">
+				<br>
+				<form style="width: 100%;" method="post" action=".">
+					<input type="text" class="input50" id="name" name="id" value="{{ row.id }}" hidden>
+					<input type="text" class="input50" id="name" name="user_id" value="{{ current_user_id }}" hidden>
+					<div style="float: left; width: 100%;">
+						<div class="wrap-input50 validate-input ml-2" style="float: left; width: 10%;"
+							data-validate="Name is required">
+							<label class="label-input50" for="name">id</label>
+							<input type="text" class="input50" id="name" value="{{ row.id }}" disabled>
+							<span class="focus-input100"></span>
+						</div>
+						<div class="wrap-input50 validate-input ml-2" style="float: left; width: 35%;"
+							data-validate="Name is required">
+							<label class="label-input50" for="name">{{ row.annotator_id}}</label>
+							<input id="name" class="input50" type="text" name="annotation1" placeholder="Annotation 1"
+								value="{{ row.annotation1 }}">
+							<span class="focus-input100"></span>
+						</div>
+						<div class="wrap-input50 validate-input ml-2 mr-2" style="float: left; width: 35%;"
+							data-validate="Name is required">
+							<label class="label-input50" for="name">{{ row.annotator_id2}}</label>
+							<input id="name" class="input50" type="text" name="annotation2" placeholder="Annotation 2"
+								value="{{ row.annotation2 }}">
+							<span class="focus-input100"></span>
+						</div>
+						<button class="contact50-form-btn ml-2">
+							Send
+						</button>
+						<br>
+					</div>
+					<br>
+
+				</form>
+				{% endfor %}
+
+
+
 			</div>
+
+
+
 		</div>
 	</div>
 
+	<script type="text/javascript" src="brython.min.js"></script>
+	<script type="text/javascript" src="brython_stdlib.min.js"></script>
 
-
-
-
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<script src="vendor/animsition/js/animsition.min.js"></script>
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<script src="vendor/bootstrap/js/popper.js"></script>
 	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<script src="vendor/select2/select2.min.js"></script>
 	<script>
-		$(".js-select2").each(function(){
+		$(".js-select2").each(function () {
 			$(this).select2({
 				minimumResultsForSearch: 20,
 				dropdownParent: $(this).next('.dropDownSelect2')
 			});
 		})
-		$(".js-select2").each(function(){
-			$(this).on('select2:open', function (e){
+		$(".js-select2").each(function () {
+			$(this).on('select2:open', function (e) {
 				$(this).parent().next().addClass('eff-focus-selection');
 			});
 		});
-		$(".js-select2").each(function(){
-			$(this).on('select2:close', function (e){
+		$(".js-select2").each(function () {
+			$(this).on('select2:close', function (e) {
 				$(this).parent().next().removeClass('eff-focus-selection');
 			});
 		});
 
 	</script>
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<script src="vendor/daterangepicker/moment.min.js"></script>
 	<script src="vendor/daterangepicker/daterangepicker.js"></script>
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<script src="vendor/countdowntime/countdowntime.js"></script>
-<!--===============================================================================================-->
+	<!--===============================================================================================-->
 	<script src="js/main.js"></script>
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
 	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
 
-	  gtag('config', 'UA-23581568-13');
+		gtag('config', 'UA-23581568-13');
 	</script>
 </body>
+
 </html>
