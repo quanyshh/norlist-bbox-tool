@@ -35,7 +35,7 @@ def query(sql_query, typeOp="select"):
         return remote_query(sql_query, typeOp)
         
     elif type_of_run == "server" or type_of_run == "s":
-        connection_object = pymysql.connect(host='172.16.3.62', user=sql_username,
+        connection_object = pymysql.connect(host='127.0.0.1', user=sql_username,
                     passwd=sql_password, db=sql_main_database, cursorclass=cursorType)
 
         rows = ""
