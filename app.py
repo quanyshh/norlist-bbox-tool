@@ -6,10 +6,11 @@ Tool to validate handwritten dataset
 Copyright (c) 2020 NORLIST.kz
 Written by Kuanysh Slyamkhan, Nuradin Islam, Galymzhan Abdimanap.
 
-Version 1.0
+Version 2.0
 """
 
 # Import library.
+import os
 from flask import Flask, request, render_template, jsonify, send_from_directory
 import pymysql
 import pandas as pd
@@ -24,7 +25,7 @@ sql_password = 'P@ssw0rd2020'
 sql_main_database = 'users'
 sql_port = 3306
 sql_ip = '1.1.1.1.1'
-cusrorType = pymysql.cursors.DictCursor
+cursorType = pymysql.cursors.DictCursor
 
 
 def query(sql_query, typeOp="select"):
@@ -32,27 +33,28 @@ def query(sql_query, typeOp="select"):
     # Try connection.
     if type_of_run == "remote" or type_of_run == "r":
         return remote_query(sql_query, typeOp)
-    else:
+        
+    elif type_of_run == "server" or type_of_run == "s":
         connection_object = pymysql.connect(host='172.16.3.62', user=sql_username,
                     passwd=sql_password, db=sql_main_database, cursorclass=cursorType)
 
-    rows = ""
-    try:
-        cursor_object = connection_object.cursor()
-        cursor_object.execute(sql_query)
+        rows = ""
+        try:
+            cursor_object = connection_object.cursor()
+            cursor_object.execute(sql_query)
 
-        # If type of operation is UPDATE, execute commit.
-        if typeOp == "update":
-            connection_object.commit()
-        else:
-            rows = cursor_object.fetchall()
-    except Exception as e:
-        print(f"Exception occured: {e}")
-    finally:
-        cursor_object.close()
-        connection_object.close()
+            # If type of operation is UPDATE, execute commit.
+            if typeOp == "update":
+                connection_object.commit()
+            else:
+                rows = cursor_object.fetchall()
+        except Exception as e:
+            print(f"Exception occured: {e}")
+        finally:
+            cursor_object.close()
+            connection_object.close()
 
-    return rows
+        return rows
 
 
 @app.route('/media/<path:filename>')
@@ -114,5 +116,5 @@ def index():
 
 
 if __name__ == '__main__':
-    type_of_run = "remote"
+    type_of_run = os.environ['NORLIST_TOOL_RUN_TYPE']
     app.run(host='0.0.0.0', port=8829)
