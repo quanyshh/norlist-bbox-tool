@@ -1,73 +1,118 @@
-from flask import Flask, request, render_template, jsonify
-import mysql.connector
-from sshtunnel import SSHTunnelForwarder
+
+"""
+
+Tool to validate handwritten dataset
+
+Copyright (c) 2020 NORLIST.kz
+Written by Kuanysh Slyamkhan, Nuradin Islam, Galymzhan Abdimanap.
+
+Version 1.0
+"""
+
+# Import library.
+from flask import Flask, request, render_template, jsonify, send_from_directory
 import pymysql
 import pandas as pd
+from mysql_connector import remote_query
 
 app = Flask(__name__, static_folder='static/')
 
-
+# Database config.
 sql_hostname = 'localhost'
 sql_username = 'root'
 sql_password = 'P@ssw0rd2020'
 sql_main_database = 'users'
 sql_port = 3306
-ssh_host = '172.16.3.62'
-ssh_user = 'g.abdimanap'
-mypkey = 'FOURWORDS'
-ssh_port = 22
 sql_ip = '1.1.1.1.1'
-def conn(sql_query):
-    with SSHTunnelForwarder(
-            (ssh_host, ssh_port),
-            ssh_username=ssh_user,
-            ssh_password=mypkey,
-            remote_bind_address=(sql_hostname, sql_port)) as tunnel:
-        conn = pymysql.connect(host='127.0.0.1', user=sql_username,
-                passwd=sql_password, db=sql_main_database,
-                port=tunnel.local_bind_port)
-
-        
-        data = pd.read_sql_query(sql_query, conn)
-        conn.close()
-    return data
-    #conn.close()
+cusrorType = pymysql.cursors.DictCursor
 
 
-var_on_server = [1,2,3,4,5,6]
-#Hello
-sql = "select * from users_last_image;"
-# val = (user['first_name'], user['last_name'], user['id'], user_last_word, user['username'], user['id'], user_last_word)
-data = conn('select * from users_last_image;')
-# users_list=[]
-# for user in data['user_name']:
-    # print(user)
+def query(sql_query, typeOp="select"):
+    """ Execute query."""
+    # Try connection.
+    if type_of_run == "remote" or type_of_run == "r":
+        return remote_query(sql_query, typeOp)
+    else:
+        connection_object = pymysql.connect(host='172.16.3.62', user=sql_username,
+                    passwd=sql_password, db=sql_main_database, cursorclass=cursorType)
 
-
-filename = 'Dataset_qazaq_words_05102020/417/words/417_018_004.jpg'
-annotator_id = '398822459'
-annotation1 = 'заттай'
-
-annotator_id2 = '537619641'
-annotation2 = 'заттай'
-
-
-@app.route('/')
-def index():
-    """Return the main page."""
-    print('index print statement here')
-    return render_template('index.html', var_from_server=var_on_server, filename=filename, annotation1=annotation1, annotation2=annotation2, users = data['user_name'])
-
-
-@app.route('/increment_on_server', methods=['GET', 'POST'])
-def increment_on_server():
-    """Receieve number from browser, add one and return it."""
-
-    print('increment_on_server print statement here')
-
-    data = request.json
+    rows = ""
     try:
-        new_number = 1 + int(data['package_to_server'])
-        return str(new_number)
-    except ValueError:
-        return 'Please Input A Valid Number'
+        cursor_object = connection_object.cursor()
+        cursor_object.execute(sql_query)
+
+        # If type of operation is UPDATE, execute commit.
+        if typeOp == "update":
+            connection_object.commit()
+        else:
+            rows = cursor_object.fetchall()
+    except Exception as e:
+        print(f"Exception occured: {e}")
+    finally:
+        cursor_object.close()
+        connection_object.close()
+
+    return rows
+
+
+@app.route('/media/<path:filename>')
+def base_static(filename):
+    """ Get base path for image."""
+
+    return send_from_directory(app.root_path + '/../', filename)
+
+def get_images(user_id):
+    """ Get data."""
+
+    data = query(f'select id, filename, annotation1, annotator_id, annotation2, annotator_id2 from image_annotations where annotation1 != annotation2 AND (annotator_id = {user_id} OR annotator_id2 = {user_id}) limit 10;')
+    total = query(f'select count(*) as total from image_annotations where annotator_id = {user_id} OR annotator_id2 = {user_id};')
+    misc = query(f'select count(*) as misc from image_annotations where annotation1 != annotation2 AND (annotator_id = {user_id} OR annotator_id2 = {user_id});')
+    return data, total, misc
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    """ Return the main page."""
+
+    info_user = query('select * from users_last_image;')
+
+    data={}
+    user_id=request.args.get('service')
+    total = 0
+    misc = 0
+
+    # If request GET and return images and annotations for correction.
+    if user_id is not None:
+        data, total, misc = get_images(user_id)
+        return render_template('index.html',  users = info_user, data = data, total=total[0]['total'], misc=misc[0]['misc'], current_user_id=user_id)
+    
+    # If request POST and updates annotations.
+    if request.method == 'POST':
+
+        type_button = request.form['button']
+        id_ = int(request.form['id'])
+        user_id = request.form['user_id']
+        if type_button == 'DELETE':
+            query(f'UPDATE image_annotations SET isdelete1=true, isdelete2=true, annotation1=NULL, annotation2=NULL, verified=false WHERE id={id_};', typeOp='update')
+            print("hello")
+
+        if type_button == 'SAVE':
+            # Get data from form.
+            annotation1 = request.form['annotation1']
+            annotation2 = request.form['annotation2']
+        
+            if annotation1 == annotation2:
+                # Query for DB.
+                query(f'UPDATE image_annotations SET annotation1="{annotation1}", annotation2="{annotation2}", verified=true WHERE id={id_};', typeOp='update')
+
+        #
+        data, total, misc = get_images(user_id)
+        return render_template('index.html',  users = info_user, data = data, total=total[0]['total'], misc=misc[0]['misc'], current_user_id=user_id)
+
+
+
+    return render_template('index.html', users = info_user, total=total, misc=misc, current_user_id=user_id)
+
+
+if __name__ == '__main__':
+    type_of_run = "remote"
+    app.run(host='0.0.0.0', port=8829)
