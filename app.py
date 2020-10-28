@@ -10,9 +10,12 @@ Version 1.0
 """
 
 # Import library.
+import os
 from flask import Flask, request, render_template, jsonify, send_from_directory
 import pymysql
 import pandas as pd
+from sshtunnel import SSHTunnelForwarder
+from mysql_connector import remote_query
 
 app = Flask(__name__, static_folder='static/')
 
@@ -23,14 +26,17 @@ sql_password = 'P@ssw0rd2020'
 sql_main_database = 'users'
 sql_port = 3306
 sql_ip = '1.1.1.1.1'
-cusrorType = pymysql.cursors.DictCursor
+cursorType = pymysql.cursors.DictCursor
 
 
 def query(sql_query, typeOp="select"):
     """ Execute query."""
-    # Try connection.
-    connection_object = pymysql.connect(host='127.0.0.1', user=sql_username,
-                passwd=sql_password, db=sql_main_database, cursorclass=cusrorType)
+
+    if type_of_run == "remote" or type_of_run == "r":
+        return remote_query(sql_query, typeOp)
+    else:
+        connection_object = pymysql.connect(host='172.16.3.62', user=sql_username,
+                    passwd=sql_password, db=sql_main_database, cursorclass=cursorType)
 
     rows = ""
     try:
@@ -70,6 +76,7 @@ def index():
     """ Return the main page."""
 
     info_user = query('select * from users_last_image;')
+    print(info_user)
 
     data={}
     user_id=request.args.get('service')
@@ -105,4 +112,5 @@ def index():
 
 
 if __name__ == '__main__':
-	app.run(host='0.0.0.0', port=8829)
+    type_of_run = "remote"
+    app.run(host='0.0.0.0', port=8829)
