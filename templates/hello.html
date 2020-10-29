@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+    <title>Reusable Form Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <script type="text/javascript" src="brython.js"></script> -->
+    
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.10/brython.min.js"></script> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.8.10/brython_stdlib.min.js"></script> -->
+  <script type="text/javascript" src="brython.min.js"></script>
+  <script type="text/javascript" src="brython_stdlib.min.js"></script>
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+<!--===============================================================================================-->
+    <link rel="stylesheet" media="screen" href="static/bootstrap.min.css">
+    <link rel="stylesheet" href="static/bootstrap-theme.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div class="container">
+<h2>Flask Web Form</h2>
+<form action="" method="post" role="form">
+{ { form.csrf }}
+<div class="wrap-input100">
+    <div class="label-input100">Выберите аннотатора</div>
+    <div>
+        <select class="js-select2" name="service">
+            {% for element in users %}
+                <option id="id" name= "id">{{element}}</option>
+            {% endfor %}
+        </select>  
+    </div>
+    <span class="focus-input100"></span>
+</div>
+<button type="submit" class="btn btn-success">Submit</button>
+</form>{% with messages = get_flashed_messages() %}
+{% if messages %}
+
+{% for message in messages %}
+{% if "Error" not in message[1]: %}
+<div class="alert alert-info">
+   <strong>Success! </strong> { { message[1] }}</div>
+{% endif %}
+
+{% if "Error" in message[1]: %}
+<div class="alert alert-warning">
+   { { message[1] }}</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+</div>
+
+</html>

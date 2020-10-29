@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 # mysql config
 mysql.config
 
+||||||| 046ad41
+=======
+#VSCODE
+.vscode/
+
+>>>>>>> dev
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
