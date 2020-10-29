@@ -1,11 +1,24 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # mysql config
 mysql.config
 
 ||||||| 046ad41
 =======
 #VSCODE
+||||||| 65ffa59
+#VSCODE
+=======
+# VSCODE
+>>>>>>> dev
 .vscode/
+
+<<<<<<< HEAD
+>>>>>>> dev
+||||||| 65ffa59
+=======
+# nohup
+.nohup.out
 
 >>>>>>> dev
 # Byte-compiled / optimized / DLL files
