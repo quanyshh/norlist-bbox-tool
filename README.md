@@ -17,21 +17,10 @@ pip install -r requirements.txt
 Linux: 
 - On server:
 ```sh
-NORLIST_TOOL_RUN_TYPE='s' python app.py
+python app.py s
 ```
 
 - On local pc:
 ```sh
-NORLIST_TOOL_RUN_TYPE='r' python app.py
-```
-Windows:
-- Powershell:
-```sh
-Set-Variable -Name "NORLIST_TOOL_RUN_TYPE" -Value "r" 
-python app.py
-```
--cmd:
-```sh
-SET NORLIST_TOOL_RUN_TYPE='r'
-python app.py
+python app.py r
 ```
