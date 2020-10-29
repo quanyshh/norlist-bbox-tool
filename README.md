@@ -14,13 +14,13 @@ pip install -r requirements.txt
 - python >= 3.6
 
 ### Run
-For production release:
+Linux: 
+- On server:
 ```sh
-NORLIST_TOOL_RUN_TYPE='s' python app.py
+python app.py s
 ```
 
-For development:
+- On local pc:
 ```sh
-NORLIST_TOOL_RUN_TYPE='r' python app.py
+python app.py r
 ```
-

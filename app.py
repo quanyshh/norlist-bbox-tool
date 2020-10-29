@@ -10,6 +10,7 @@ Version 2.0
 """
 
 # Import library.
+import sys
 import os
 from flask import Flask, request, render_template, jsonify, send_from_directory
 import pymysql
@@ -210,7 +211,6 @@ def index():
         user_id = request.form['user_id']
         if type_button == 'DELETE':
             query(f'UPDATE image_annotations SET isdelete1=true, isdelete2=true, annotation1=NULL, annotation2=NULL, verified=false WHERE id={id_};', typeOp='update')
-            print("hello")
 
         if type_button == 'SAVE':
             # Get data from form.
@@ -278,6 +278,7 @@ def increment_on_server():
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     type_of_run = "remote"
     app.run(host='0.0.0.0', port=8829)
 ||||||| 046ad41
@@ -290,5 +291,14 @@ if __name__ == '__main__':
 =======
 if __name__ == '__main__':
     type_of_run = os.environ['NORLIST_TOOL_RUN_TYPE']
+||||||| e15d8cf
+    type_of_run = os.environ['NORLIST_TOOL_RUN_TYPE']
+=======
+    try:
+        type_of_run = sys.argv[1]
+    except Exception as e:
+        print("Добавьте аргумент")
+
+>>>>>>> dev
     app.run(host='0.0.0.0', port=8829)
 >>>>>>> dev
