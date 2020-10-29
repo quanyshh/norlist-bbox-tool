@@ -14,13 +14,24 @@ pip install -r requirements.txt
 - python >= 3.6
 
 ### Run
-For production release:
+Linux: 
+- On server:
 ```sh
 NORLIST_TOOL_RUN_TYPE='s' python app.py
 ```
 
-For development:
+- On local pc:
 ```sh
 NORLIST_TOOL_RUN_TYPE='r' python app.py
 ```
-
+Windows:
+- Powershell:
+```sh
+Set-Variable -Name "NORLIST_TOOL_RUN_TYPE" -Value "r" 
+python app.py
+```
+-cmd:
+```sh
+SET NORLIST_TOOL_RUN_TYPE='r'
+python app.py
+```

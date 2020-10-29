@@ -44,5 +44,5 @@ def remote_query(sql_query, typeOp="select"):
         finally:
             cursor_object.close()
             connection_object.close()
-        print(rows)
+            
         return rows
