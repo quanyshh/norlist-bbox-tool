@@ -22,27 +22,28 @@ def remote_query(sql_query, typeOp="select"):
     rows = ""
     config_dict = _read_config()
 
-    with SSHTunnelForwarder((config_dict['ssh_host'], int(config_dict['ssh_port'])), 
-    ssh_username=config_dict['ssh_user'], ssh_password=config_dict['mypkey'],
-    remote_bind_address=(config_dict['sql_hostname'], int(config_dict['sql_port']))) as tunnel:
+    if typeOp == "select":
+        with SSHTunnelForwarder((config_dict['ssh_host'], int(config_dict['ssh_port'])), 
+        ssh_username=config_dict['ssh_user'], ssh_password=config_dict['mypkey'],
+        remote_bind_address=(config_dict['sql_hostname'], int(config_dict['sql_port']))) as tunnel:
 
-        connection_object = pymysql.connect(host='127.0.0.1', 
-        user=config_dict['sql_username'], passwd=config_dict['sql_password'], 
-        db=config_dict['sql_main_database'], port=tunnel.local_bind_port, cursorclass=pymysql.cursors.DictCursor)
+            connection_object = pymysql.connect(host='127.0.0.1', 
+            user=config_dict['sql_username'], passwd=config_dict['sql_password'], 
+            db=config_dict['sql_main_database'], port=tunnel.local_bind_port, cursorclass=pymysql.cursors.DictCursor)
 
-        try:
-            cursor_object = connection_object.cursor()
-            cursor_object.execute(sql_query)
+            try:
+                cursor_object = connection_object.cursor()
+                cursor_object.execute(sql_query)
 
-            # If type of operation is UPDATE, execute commit.
-            if typeOp == "update":
-                connection_object.commit()
-            else:
+                # connection_object.commit()
                 rows = cursor_object.fetchall()
-        except Exception as e:
-            print(f"Exception occured: {e}")
-        finally:
-            cursor_object.close()
-            connection_object.close()
-            
+            except Exception as e:
+                print(f"Exception occured: {e}")
+            finally:
+                cursor_object.close()
+                connection_object.close()
+                
+        return rows
+
+    else:
         return rows

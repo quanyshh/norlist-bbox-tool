@@ -2,7 +2,7 @@
 Tool to validate handwritten dataset
 Copyright (c) 2020 NORLIST.kz
 Written by Kuanysh Slyamkhan, Nuradin Islam, Galymzhan Abdimanap.
-Version 2.0
+Version 2.1
 """
 
 # Import library.
@@ -90,10 +90,13 @@ def index():
         type_button = request.form['button']
         id_ = int(request.form['id'])
         user_id = request.form['user_id']
+
         if type_button == 'DELETE':
+            print("DELETE")
             query(f'UPDATE image_annotations SET isdelete1=true, isdelete2=true, annotation1=NULL, annotation2=NULL, verified=false WHERE id={id_};', typeOp='update')
 
         if type_button == 'SAVE':
+            print("SAVE")
             # Get data from form.
             annotation1 = request.form['annotation1']
             annotation2 = request.form['annotation2']
@@ -102,11 +105,9 @@ def index():
                 # Query for DB.
                 query(f'UPDATE image_annotations SET annotation1="{annotation1}", annotation2="{annotation2}", verified=true WHERE id={id_};', typeOp='update')
 
-        #
+        
         data, total, misc = get_images(user_id)
         return render_template('index.html',  users = info_user, data = data, total=total[0]['total'], misc=misc[0]['misc'], current_user_id=user_id)
-
-
 
     return render_template('index.html', users = info_user, total=total, misc=misc, current_user_id=user_id)
 
@@ -117,4 +118,9 @@ if __name__ == '__main__':
     except Exception as e:
         print("Добавьте аргумент")
 
-    app.run(host='0.0.0.0', port=8829)
+    if type_of_run == "remote" or type_of_run == "r":
+        app.run(host='0.0.0.0', port=8080)
+    elif type_of_run == "server" or type_of_run == "s":
+        app.run(host='0.0.0.0', port=8829)
+    else:
+        print("Аргументы: \"server\" or \"remote\"")
